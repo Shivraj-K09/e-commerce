@@ -8,6 +8,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { createClient } from "@/utils/supabase/client";
 import {
   HeartIcon,
   ShoppingCartIcon,
@@ -15,11 +16,9 @@ import {
   VerifiedIcon,
 } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { Icons } from "./icons";
-import { Button } from "./ui/button";
 import { useParams } from "next/navigation";
-import { createClient } from "@/utils/supabase/client";
+import { useEffect, useState } from "react";
+import { Button } from "./ui/button";
 import { useToast } from "./ui/use-toast";
 
 interface Product {
@@ -242,12 +241,6 @@ export function ProductInfo() {
               <div className="border rounded-2xl p-5">
                 <div className="flex items-center justify-between">
                   <h1 className="text-3xl font-semibold">{product.name}</h1>
-                  <div
-                    className="border rounded-full p-1.5 border-white"
-                    aria-hidden="true"
-                  >
-                    <Icons.nike className="size-6" />
-                  </div>
                 </div>
                 <div className="text-muted-foreground flex items-center">
                   <span>By {product.retailer_name}</span>
