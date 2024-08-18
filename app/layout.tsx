@@ -1,9 +1,11 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
+import { Navbar } from "@/components/navbar";
 import { ThemeProvider } from "@/providers/theme-provider";
-
-const inter = Inter({ subsets: ["latin"] });
+import { GeistSans } from "geist/font/sans";
+import type { Metadata } from "next";
+import "./globals.css";
+import { TailwindIndicator } from "@/components/tailwind-indicator";
+import { Toaster as ToasterSonner } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,15 +18,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+    <html lang="en">
+      <body className={GeistSans.className}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <div className="flex flex-col h-full">
+            <main className="flex-grow">{children}</main>
+          </div>
+          <ToasterSonner richColors position="top-center" />
+          <Toaster />
+          <TailwindIndicator />
         </ThemeProvider>
       </body>
     </html>
