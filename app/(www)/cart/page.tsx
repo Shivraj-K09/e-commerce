@@ -164,12 +164,12 @@ export default function Cart() {
                       <TableRow key={item.id}>
                         <TableCell>
                           <div className="flex items-center">
-                            <div className="relative w-40 h-25 mr-4">
+                            <div className="relative w-40 aspect-video mr-4">
                               <Image
                                 src={item.products.main_image_url}
                                 alt={item.products.name}
                                 width={160}
-                                height={160}
+                                height={100}
                                 objectFit="cover"
                                 className="rounded-xl"
                               />

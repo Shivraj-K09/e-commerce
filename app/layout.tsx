@@ -26,10 +26,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex flex-col h-full">
+          <div className="flex flex-col h-full ">
             <main className="flex-grow">
               {children}
-
               <Analytics />
             </main>
           </div>
