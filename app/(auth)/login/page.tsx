@@ -16,11 +16,11 @@ export default function Login() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: `${process.env.NEXT_PUBLIC_AXON_ROOT_URL}/auth/callback`,
+        redirectTo: `${process.env.NEXT_PUBLIC_ROOT_URL}/auth/callback`,
       },
     });
 
-    console.log(`${process.env.NEXT_PUBLIC_AXON_ROOT_URL}/auth/callback`);
+    console.log(`${process.env.NEXT_PUBLIC_ROOT_URL}/auth/callback`);
 
     if (error) {
       setIsLoading(false);
