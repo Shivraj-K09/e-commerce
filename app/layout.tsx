@@ -1,11 +1,11 @@
-import { Navbar } from "@/components/navbar";
-import { ThemeProvider } from "@/providers/theme-provider";
-import { GeistSans } from "geist/font/sans";
-import type { Metadata } from "next";
-import "./globals.css";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
 import { Toaster as ToasterSonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
+import { ThemeProvider } from "@/providers/theme-provider";
+import { Analytics } from "@vercel/analytics/react";
+import { GeistSans } from "geist/font/sans";
+import type { Metadata } from "next";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -27,7 +27,11 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div className="flex flex-col h-full">
-            <main className="flex-grow">{children}</main>
+            <main className="flex-grow">
+              {children}
+
+              <Analytics />
+            </main>
           </div>
           <ToasterSonner richColors position="top-center" />
           <Toaster />
