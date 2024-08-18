@@ -12,9 +12,7 @@ export default async function RootLayout({
     <>
       <CartProvider>
         <div className="flex flex-col h-full">
-          <div className="flex">
-            <Navbar />
-          </div>
+          <Navbar />
           <main className="flex-grow">{children}</main>
         </div>
         <TailwindIndicator />
