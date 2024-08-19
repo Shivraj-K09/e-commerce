@@ -1,20 +1,33 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import React, { useState } from "react";
 
 export function Sidebar({
   onPriceRangeChange,
+  onReset,
 }: {
-  onPriceRangeChange: (minPrice: number, maxPrice: number) => void;
+  onPriceRangeChange: (
+    minPrice: number | null,
+    maxPrice: number | null
+  ) => void;
+  onReset: () => void;
 }) {
-  const [minPrice, setMinPrice] = useState<number | undefined>();
-  const [maxPrice, setMaxPrice] = useState<number | undefined>();
+  const [minPrice, setMinPrice] = useState<string>();
+  const [maxPrice, setMaxPrice] = useState<string>();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (minPrice !== undefined && maxPrice !== undefined) {
-      onPriceRangeChange(minPrice, maxPrice);
-    }
+    const min = minPrice ? Number(minPrice) : null;
+    const max = maxPrice ? Number(maxPrice) : null;
+    onPriceRangeChange(min, max);
+  };
+
+  const handleReset = () => {
+    setMinPrice("");
+    setMaxPrice("");
+    onReset();
   };
 
   return (
@@ -22,30 +35,34 @@ export function Sidebar({
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label className="block text-sm font-medium mb-2">Min Price</label>
-          <input
-            type="number"
-            value={minPrice ?? ""}
-            onChange={(e) => setMinPrice(Number(e.target.value))}
+          <Input
+            value={minPrice}
+            onChange={(e) => setMinPrice(e.target.value)}
             className="w-full px-3 py-2 border rounded"
             placeholder="Min Price"
           />
         </div>
         <div className="mb-4">
           <label className="block text-sm font-medium mb-2">Max Price</label>
-          <input
-            type="number"
-            value={maxPrice ?? ""}
-            onChange={(e) => setMaxPrice(Number(e.target.value))}
+          <Input
+            value={maxPrice}
+            onChange={(e) => setMaxPrice(e.target.value)}
             className="w-full px-3 py-2 border rounded"
             placeholder="Max Price"
           />
         </div>
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded"
-        >
-          Apply
-        </button>
+        <div className="flex gap-2">
+          <Button type="submit" className="w-full py-2 px-4 rounded">
+            Apply
+          </Button>
+          <Button
+            variant="secondary"
+            className="w-full py-2 px-4 rounded"
+            onClick={handleReset}
+          >
+            Reset
+          </Button>
+        </div>
       </form>
     </aside>
   );

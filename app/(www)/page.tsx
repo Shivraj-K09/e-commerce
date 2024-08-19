@@ -7,17 +7,23 @@ import { Loader2Icon } from "lucide-react";
 
 export default function Home() {
   const [priceRange, setPriceRange] = useState<{
-    minPrice: number;
-    maxPrice: number;
+    minPrice: number | null;
+    maxPrice: number | null;
   } | null>(null);
 
-  const handlePriceRangeChange = (minPrice: number, maxPrice: number) => {
+  const handlePriceRangeChange = (
+    minPrice: number | null,
+    maxPrice: number | null
+  ) => {
     setPriceRange({ minPrice, maxPrice });
   };
 
   return (
     <div className="flex h-full">
-      <Sidebar onPriceRangeChange={handlePriceRangeChange} />
+      <Sidebar
+        onPriceRangeChange={handlePriceRangeChange}
+        onReset={() => setPriceRange(null)}
+      />
       <div className="flex-grow overflow-auto lg:ml-[260px]">
         <Suspense
           fallback={

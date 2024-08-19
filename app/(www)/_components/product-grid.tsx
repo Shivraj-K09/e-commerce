@@ -19,7 +19,7 @@ import { toast } from "sonner";
 export function ProductGrid({
   priceRange,
 }: {
-  priceRange: { minPrice: number; maxPrice: number } | null;
+  priceRange: { minPrice: number | null; maxPrice: number | null } | null;
 }) {
   const [isLoading, setIsLoading] = useState(true);
   const [products, setProducts] = useState<any[]>([]);
@@ -40,9 +40,13 @@ export function ProductGrid({
     let query = supabase.from("products").select("*");
 
     if (priceRange) {
-      query = query
-        .gte("price", priceRange.minPrice)
-        .lte("price", priceRange.maxPrice);
+      if (priceRange.minPrice !== null) {
+        query = query.gte("price", priceRange.minPrice);
+      }
+
+      if (priceRange.maxPrice !== null) {
+        query = query.lte("price", priceRange.maxPrice);
+      }
     }
 
     if (searchQuery) {

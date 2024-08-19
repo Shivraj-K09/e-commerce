@@ -165,7 +165,7 @@ export function ProductInfo() {
   }
 
   return (
-    <div className="pt-5 w-full max-w-[1700px] mx-auto">
+    <div className="pt-5 w-full max-w-[1700px] mx-auto px-4 sm:px-6 lg:px-8">
       <nav aria-label="Breadcrumb">
         <Breadcrumb className="py-2">
           <BreadcrumbList>
@@ -184,202 +184,194 @@ export function ProductInfo() {
         </Breadcrumb>
       </nav>
 
-      <div className="flex pt-3 w-full gap-8">
-        <div className="flex w-full">
-          <div className="w-full">
-            <div className="rounded-2xl h-[592px] overflow-hidden">
+      <div className="flex flex-col lg:flex-row pt-3 w-full gap-8">
+        <div className="w-full lg:w-1/2">
+          <div className="rounded-2xl h-[300px] sm:h-[400px] md:h-[500px] lg:h-[592px] overflow-hidden">
+            <Image
+              src={mainImage}
+              alt={product.name}
+              width={1000}
+              height={600}
+              className="object-cover w-full h-full"
+              priority
+            />
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 pt-3">
+            <div
+              className="cursor-pointer h-24 sm:h-32 w-full overflow-hidden rounded-2xl"
+              onClick={() => handleImageClick(product.main_image_url)}
+            >
               <Image
-                src={mainImage} // Use mainImage state here
-                alt={product.name}
-                width={1000}
-                height={600}
+                src={product.main_image_url}
+                alt={`${product.name} main view`}
+                width={300}
+                height={96}
+                loading="lazy"
                 className="object-cover w-full h-full"
-                priority
               />
             </div>
 
-            <div className="grid grid-cols-4 gap-2 pt-3">
-              {/* Main image as the first thumbnail */}
+            {product.additional_image_urls.map((image, index) => (
               <div
-                className="cursor-pointer h-36 w-full overflow-hidden rounded-2xl"
-                onClick={() => handleImageClick(product.main_image_url)}
+                key={index}
+                className="cursor-pointer h-24 sm:h-32 w-full overflow-hidden rounded-2xl"
+                onClick={() => handleImageClick(image)}
               >
                 <Image
-                  src={product.main_image_url}
-                  alt={`${product.name} main view`}
+                  src={image}
+                  alt={`${product.name} view ${index + 1}`}
                   width={300}
                   height={96}
                   loading="lazy"
                   className="object-cover w-full h-full"
                 />
               </div>
-
-              {/* Additional images */}
-              {product.additional_image_urls.map((image, index) => (
-                <div
-                  key={index}
-                  className="cursor-pointer h-36 w-full overflow-hidden rounded-2xl"
-                  onClick={() => handleImageClick(image)}
-                >
-                  <Image
-                    src={image}
-                    alt={`${product.name} view ${index + 1}`}
-                    width={300}
-                    height={96}
-                    loading="lazy"
-                    className="object-cover w-full h-full"
-                  />
-                </div>
-              ))}
-            </div>
+            ))}
           </div>
         </div>
 
-        <div className="w-full flex flex-col gap-3">
-          <div className="flex flex-col gap-3 items-center justify-between w-full">
-            <div className="flex gap-3">
-              <div className="border rounded-2xl p-5">
-                <div className="flex items-center justify-between">
-                  <h1 className="text-3xl font-semibold">{product.name}</h1>
-                </div>
-                <div className="text-muted-foreground flex items-center">
-                  <span>By {product.retailer_name}</span>
-                  {product.is_verified && (
-                    <sup>
-                      <VerifiedIcon
-                        className="fill-blue-500 text-black size-3.5"
-                        aria-label="Verified Retailer"
-                      />
-                    </sup>
-                  )}
-                </div>
-
-                <div className="w-full pt-5">
-                  <h2 className="font-semibold mb-1">Price:</h2>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-0.5">
-                      <span className="text-3xl font-semibold">
-                        ₹{formatPrice(product.price)}
-                      </span>
-                      <span>/only</span>
-                    </div>
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    including all taxes
-                  </p>
-                </div>
-
-                <div className="w-full pt-5">
-                  <h2 className="font-semibold mb-1">Product Details:</h2>
-                  <p className="text-muted-foreground text-[0.95rem] text-justify">
-                    {product.description}
-                  </p>
-                </div>
-              </div>
+        <div className="w-full lg:w-1/2 flex flex-col gap-3 mt-6 lg:mt-0 pb-20">
+          <div className="border rounded-2xl p-4 sm:p-5">
+            <div className="flex items-center justify-between">
+              <h1 className="text-2xl sm:text-3xl font-semibold">
+                {product.name}
+              </h1>
+            </div>
+            <div className="text-muted-foreground flex items-center">
+              <span>By {product.retailer_name}</span>
+              {product.is_verified && (
+                <sup>
+                  <VerifiedIcon
+                    className="fill-blue-500 text-black size-3.5 ml-1"
+                    aria-label="Verified Retailer"
+                  />
+                </sup>
+              )}
             </div>
 
-            <div className="flex gap-3 w-full">
-              <div className="border rounded-2xl p-5 w-full">
-                <div className="flex flex-col gap-2 w-full">
-                  <h2>Size</h2>
-                  <div className="grid grid-cols-4 gap-2">
-                    {product.available_sizes.map((size) => (
-                      <Button
-                        key={size}
-                        className={`border rounded-lg text-center py-3 font-medium cursor-pointer ${
-                          selectedSize === size
-                            ? "bg-primary text-primary-foreground"
-                            : ""
-                        }`}
-                        onClick={() => setSelectedSize(size)}
-                      >
-                        <span className="text-sm">{size}</span>
-                      </Button>
-                    ))}
-                  </div>
-                  {selectedSize && (
-                    <p className="mt-2 text-sm text-muted-foreground">
-                      Selected size: {selectedSize}
-                    </p>
-                  )}
+            <div className="w-full pt-4 sm:pt-5">
+              <h2 className="font-semibold mb-1">Price:</h2>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-0.5">
+                  <span className="text-2xl sm:text-3xl font-semibold">
+                    ₹{formatPrice(product.price)}
+                  </span>
+                  <span>/only</span>
                 </div>
               </div>
-              <div className="border rounded-2xl p-5 w-full">
-                <h2 className="font-bold mb-2">Shipping Information:</h2>
-                <ul className="list-disc pl-5 space-y-2">
-                  <li className="text-muted-foreground text-[0.92rem]">
-                    Free standard shipping on orders over $100.
-                  </li>
-                  <li className="text-muted-foreground text-[0.92rem]">
-                    Express shipping available for an additional $15.
-                  </li>
-                  <li className="text-muted-foreground text-[0.92rem]">
-                    Estimated delivery date: Aug 18 - Aug 20.
-                  </li>
-                </ul>
-              </div>
+              <p className="text-sm text-muted-foreground">
+                including all taxes
+              </p>
             </div>
-            <div className="border rounded-2xl p-5 w-full">
-              <div className="flex items-center">
-                <TruckIcon
-                  className="size-5 mr-2 text-muted-foreground"
-                  aria-hidden="true"
-                />
-                <p className="text-muted-foreground text-[0.92rem]">
-                  30-day money-back guarantee. Returns accepted within 30 days
-                  of delivery in original condition.
-                </p>
-              </div>
+
+            <div className="w-full pt-4 sm:pt-5">
+              <h2 className="font-semibold mb-1">Product Details:</h2>
+              <p className="text-muted-foreground text-sm sm:text-[0.95rem] text-justify">
+                {product.description}
+              </p>
             </div>
           </div>
 
-          <div className="flex items-center flex-col gap-2 w-full flex-none">
-            <div className="flex items-center gap-2 w-full">
-              <Button
-                className="w-full text-base rounded-xl h-12"
-                onClick={addToCart}
-                disabled={loading}
-              >
-                {loading ? (
-                  <span className="flex items-center">
-                    <svg
-                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
+          <div className="flex flex-col sm:flex-row gap-3 w-full">
+            <div className="border rounded-2xl p-4 sm:p-5 w-full">
+              <div className="flex flex-col gap-2 w-full">
+                <h2>Size</h2>
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                  {product.available_sizes.map((size) => (
+                    <Button
+                      key={size}
+                      className={`border rounded-lg text-center py-2 sm:py-3 font-medium cursor-pointer ${
+                        selectedSize === size
+                          ? "bg-primary text-primary-foreground"
+                          : ""
+                      }`}
+                      onClick={() => setSelectedSize(size)}
                     >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    Adding...
-                  </span>
-                ) : (
-                  <>
-                    <ShoppingCartIcon className="mr-2 size-5" />
-                    Add to cart
-                  </>
+                      <span className="text-xs sm:text-sm">{size}</span>
+                    </Button>
+                  ))}
+                </div>
+                {selectedSize && (
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Selected size: {selectedSize}
+                  </p>
                 )}
-              </Button>
-              <Button
-                className="w-full text-base rounded-xl h-12"
-                variant="secondary"
-                aria-label="Add to Wishlist"
-              >
-                <HeartIcon className="size-5 mr-2" />
-                Add to wishlist
-              </Button>
+              </div>
             </div>
+            <div className="border rounded-2xl p-4 sm:p-5 w-full">
+              <h2 className="font-bold mb-2">Shipping Information:</h2>
+              <ul className="list-disc pl-5 space-y-2">
+                <li className="text-muted-foreground text-xs sm:text-sm">
+                  Free standard shipping on orders over $100.
+                </li>
+                <li className="text-muted-foreground text-xs sm:text-sm">
+                  Express shipping available for an additional $15.
+                </li>
+                <li className="text-muted-foreground text-xs sm:text-sm">
+                  Estimated delivery date: Aug 18 - Aug 20.
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className="border rounded-2xl p-4 sm:p-5 w-full pb-10">
+            <div className="flex items-center">
+              <TruckIcon
+                className="size-4 sm:size-5 mr-2 text-muted-foreground"
+                aria-hidden="true"
+              />
+              <p className="text-muted-foreground text-xs sm:text-sm">
+                30-day money-back guarantee. Returns accepted within 30 days of
+                delivery in original condition.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center flex-col sm:flex-row gap-2 w-full flex-none mt-4">
+            <Button
+              className="w-full text-sm sm:text-base rounded-xl h-10 sm:h-12"
+              onClick={addToCart}
+              disabled={loading}
+            >
+              {loading ? (
+                <span className="flex items-center">
+                  <svg
+                    className="animate-spin -ml-1 mr-3 h-4 w-4 sm:h-5 sm:w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Adding...
+                </span>
+              ) : (
+                <>
+                  <ShoppingCartIcon className="mr-2 size-4 sm:size-5" />
+                  Add to cart
+                </>
+              )}
+            </Button>
+            <Button
+              className="w-full text-sm sm:text-base rounded-xl h-10 sm:h-12"
+              variant="secondary"
+              aria-label="Add to Wishlist"
+            >
+              <HeartIcon className="size-4 sm:size-5 mr-2" />
+              Add to wishlist
+            </Button>
           </div>
         </div>
       </div>
