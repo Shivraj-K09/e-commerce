@@ -15,6 +15,7 @@ import { LogOutIcon, SettingsIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { User } from "@supabase/supabase-js";
+import { Skeleton } from "./ui/skeleton";
 
 export function Profile() {
   const [user, setUser] = useState<User | null>(null);
@@ -42,7 +43,12 @@ export function Profile() {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center">
+        <Skeleton className="h-8 mr-2 w-8 rounded-full" />
+        <Skeleton className="h-6 w-[134px] rounded-md" />
+      </div>
+    );
   }
 
   return user ? (

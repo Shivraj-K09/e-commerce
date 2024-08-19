@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 import { useCart } from "@/context/cart-context";
 import { createClient } from "@/utils/supabase/client";
@@ -117,8 +118,17 @@ export function ProductGrid({
   return (
     <div className="p-2 sm:p-4 md:p-6">
       {isLoading ? (
-        <div className="flex justify-center items-center h-64">
-          <Loader2Icon className="animate-spin h-8 w-8" />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+          {/* <Skeleton className="w-[306px] h-[360px] rounded-xl" /> */}
+          {Array.from({ length: products.length - 1 }).map((_, index) => {
+            console.log(`Rendering Skeleton #${index + 2}`);
+            return (
+              <Skeleton
+                key={index}
+                className="w-[306px] h-[360px] rounded-xl"
+              />
+            );
+          })}
         </div>
       ) : products.length > 0 ? (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
@@ -135,7 +145,8 @@ export function ProductGrid({
                       alt={product.name}
                       width={500}
                       height={500}
-                      loading="lazy"
+                      // loading="lazy"
+                      priority
                       className="object-cover w-full h-full select-none hover:scale-105 transition-transform duration-300"
                     />
                   </div>

@@ -20,10 +20,15 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { createClient } from "@/utils/supabase/client";
+import { loadStripe } from "@stripe/stripe-js";
 import { MinusIcon, PlusIcon, ShoppingBagIcon, TrashIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+);
 
 export default function Cart() {
   const supabase = createClient();
@@ -32,6 +37,17 @@ export default function Cart() {
   const [total, setTotal] = useState(0);
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [customerDetails, setCustomerDetails] = useState({
+    email: "",
+    name: "",
+    address: {
+      line1: "",
+      city: "",
+      state: "",
+      postal_code: "",
+      country: "IN",
+    },
+  });
 
   useEffect(() => {
     fetchUserAndCartItems();
@@ -116,23 +132,43 @@ export default function Cart() {
     }
   }
 
-  async function checkout() {
+  async function checkout(e: React.FormEvent) {
+    e.preventDefault();
     if (!user) return;
 
-    const { data, error } = await supabase
-      .from("user_products")
-      .update({
-        status: "purchased",
-        purchase_date: new Date().toISOString(),
-      })
-      .eq("user_id", user.id)
-      .eq("status", "in_cart")
-      .select();
+    try {
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          items: cartItems.map((item) => ({
+            price_data: {
+              currency: "inr",
+              product_data: {
+                name: item.products.name,
+              },
+              unit_amount: item.products.price * 100,
+            },
+            quantity: item.quantity,
+          })),
+          customerDetails,
+        }),
+      });
 
-    if (error) {
-      console.error("Error during checkout:", error);
-    } else {
-      fetchUserAndCartItems();
+      const session = await response.json();
+
+      const stripe = await stripePromise;
+      const { error } = await stripe!.redirectToCheckout({
+        sessionId: session.id,
+      });
+
+      if (error) {
+        console.error("Error redirecting to checkout:", error);
+      }
+    } catch (error) {
+      console.error("Error creating checkout session:", error);
     }
   }
 
